@@ -11,9 +11,13 @@ export class ListItem extends React.PureComponent {
     super();
   }
   render() {
-    const {item} = this.props;
+    const {item, setSelectedValue} = this.props;
     return (
-      <TouchableOpacity style={ListItemStyle.ComponentStyle}>
+      <TouchableOpacity
+        style={ListItemStyle.ComponentStyle}
+        onPress={() => {
+          setSelectedValue(item);
+        }}>
         <Text style={ListItemStyle.ComponentName}>{item['bus_stop_name']}</Text>
         <View style={ListItemStyle.ComponentIcon}>
           <TouchableOpacity style={ListItemStyle.IconTouchable}>
