@@ -11,7 +11,7 @@ export class ListItem extends React.PureComponent {
     super();
   }
   render() {
-    const {item, setSelectedValue} = this.props;
+    const {item, setSelectedValue ,showBusStationLocation} = this.props;
     return (
       <TouchableOpacity
         style={ListItemStyle.ComponentStyle}
@@ -20,7 +20,7 @@ export class ListItem extends React.PureComponent {
         }}>
         <Text style={ListItemStyle.ComponentName}>{item['bus_stop_name']}</Text>
         <View style={ListItemStyle.ComponentIcon}>
-          <TouchableOpacity style={ListItemStyle.IconTouchable}>
+          <TouchableOpacity style={ListItemStyle.IconTouchable} onPress={()=>{showBusStationLocation(item)}}>
             <Icon
               name="map-marker"
               size={ListItemStyle.IconProp.size}
