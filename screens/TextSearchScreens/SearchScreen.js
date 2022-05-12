@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View} from 'react-native';
+import {View,Image} from 'react-native';
 import {SearchScreenStyle} from '../../styles/screens/SearchScreen';
 import {getAllStations} from '../../util/db/busstation';
 import {SearchInput, RecommendLists} from '../../component';
@@ -19,7 +19,7 @@ const SearchScreen = ({navigation}) => {
     getAllStations(initializeMasterData);
     return () => {};
   }, []);
-  
+
   const searchStartiongPoint = input => {
     setStartingPoint(NewEmptyStation(input));
     filterData(input);
@@ -44,10 +44,13 @@ const SearchScreen = ({navigation}) => {
   };
   const setStartingPointReccomendListVisible = () => {
     setIsVisibleStartReccomend(true);
-  }
-  const showBusStationLocation=(data)=>{
-    navigation.navigate('MapSearch',{station:data})
-  }
+  };
+  const showBusStationLocation = data => {
+    navigation.navigate('MapSearch', {
+      screen: 'MapSearchScreen',
+      params: {station: data},
+    });
+  };
   return (
     <View style={SearchScreenStyle.FullScreen}>
       <SearchInput

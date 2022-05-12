@@ -54,7 +54,7 @@ export const createTables = () => {
   });
 };
 /* table vvdiig ustgah */
-export const dropTables = ()=>{
+export const dropTables = () => {
   db.transaction(txn => {
     txn.executeSql(
       `DROP TABLE IF EXISTS bus_lines`,
@@ -86,8 +86,8 @@ export const dropTables = ()=>{
         console.log('bus_line drop failed : ' + error.message);
       },
     );
-  }); 
-}
+  });
+};
 /* Автобусны маршруут өгөгдлийн сан руу оруулах */
 export const seederInitilizeBusLine = () => {
   const busLineAndStations = require('./data.json');
@@ -100,10 +100,14 @@ export const seederInitilizeBusLine = () => {
   );
   busLineAndStations.forEach(line => {
     db.transaction(function (tx) {
-      let busLineName = line["route_name"] +  line["stations"][0]["station"] +"-"+line["stations"][line["stations"].length - 1]["station"]
+      let busLineName =
+        line['route_name'] +
+        line['stations'][0]['station'] +
+        '-' +
+        line['stations'][line['stations'].length - 1]['station'];
       tx.executeSql(
         `INSERT INTO bus_lines (line_id,turn,route_name) VALUES (?,?,?)`,
-        [line["id"],line["routines"],busLineName],
+        [line['id'], line['routines'], busLineName],
         (tx, results) => {
           console.log('Results', results.rowsAffected);
           if (results.rowsAffected > 0) {
@@ -116,22 +120,54 @@ export const seederInitilizeBusLine = () => {
   });
 };
 /* Автобусны буудал өгөгдлийн санд оруулах */
-export const seederInitilizeBusStation = ()=>{
-  const busStations = require('./station.json')
-  console.log("================================")
+export const seederInitilizeBusStation = () => {
+  const busStations = require('./station.json');
+  console.log('================================');
   busStations.forEach(station => {
     db.transaction(function (tx) {
       tx.executeSql(
         `INSERT INTO bus_stops(bus_stop_name,lat,long) VALUES(?,?,?)`,
-        [station.station,station.lat,station.long],
+        [station.station, station.lat, station.long],
         (tx, results) => {
           console.log('Results', results.rowsAffected);
           if (results.rowsAffected > 0) {
             console.log('Success', 'bus_stops', {cancelable: false});
           } else console.log('bus_stops Failed');
         },
-      )
-    })
-  })
-  console.log("================================")
-}
+      );
+    });
+  });
+  console.log('================================');
+};
+export const seederBusLineAndStationCon = () => {
+  const busLineAndStations = require('./data.json');
+  console.log('line start');
+  busLineAndStations.forEach(line => {
+    line['stations'].forEach(station => {
+      db.transaction(function (tx) {
+        tx.executeSql(
+          `INSERT INTO bus_line_stops (station_index,bus_lines_id,bus_stops_id) VALUES (?,(SELECT id FROM bus_lines WHERE line_id = ` +
+            line['id'] +
+            ` AND turn = '` +
+            line['routines'] +
+            `'),(SELECT id FROM bus_stops WHERE lat =` +
+            station['lat'] +
+            ` AND long = ` +
+            station['long'] +
+            `))`,
+          [station['index']],
+          (tx, results) => {
+            console.log('Results', results.rowsAffected);
+            if (results.rowsAffected > 0) {
+              console.log('Success', 'bus_line_station', {cancelable: false});
+            } else console.log('bus_line station Failed');
+          },
+          error => {
+            console.log('bus_stop_lines: ' + error.message);
+          },
+        );
+      });
+    });
+    return;
+  });
+};

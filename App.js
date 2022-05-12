@@ -13,7 +13,13 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import {createTables, dropTables,seederInitilizeBusLine,seederInitilizeBusStation} from './util/db/db';
+import {
+  createTables,
+  dropTables,
+  seederInitilizeBusLine,
+  seederInitilizeBusStation,
+  seederBusLineAndStationCon,
+} from './util/db/db';
 // import {seederInitilizeBusLine,seederInitilizeBusStation} from './util/db/busstation';
 import {TextSearchScreens, MapSearchScreens} from './screens';
 import {TabNavigatorStyle} from './styles';
@@ -48,6 +54,7 @@ const App = () => {
     // createTables();
     // seederInitilizeBusLine();
     // seederInitilizeBusStation();
+    seederBusLineAndStationCon();
   }, []);
   return (
     <NavigationContainer>
