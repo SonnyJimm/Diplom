@@ -101,7 +101,7 @@ export const seederInitilizeBusLine = () => {
   busLineAndStations.forEach(line => {
     db.transaction(function (tx) {
       let busLineName =
-        line['route_name'] +
+        line['route_name'] +" "+
         line['stations'][0]['station'] +
         '-' +
         line['stations'][line['stations'].length - 1]['station'];
@@ -163,7 +163,14 @@ export const seederBusLineAndStationCon = () => {
             } else console.log('bus_line station Failed');
           },
           error => {
-            console.log('bus_stop_lines: ' + error.message);
+            console.log(
+              'bus_stop_lines: ' +
+                error.message +
+                ' lat:' +
+                station['lat'] +
+                ' long: ' +
+                station['long'],
+            );
           },
         );
       });

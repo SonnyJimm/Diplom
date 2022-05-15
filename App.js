@@ -54,7 +54,7 @@ const App = () => {
     // createTables();
     // seederInitilizeBusLine();
     // seederInitilizeBusStation();
-    seederBusLineAndStationCon();
+    // seederBusLineAndStationCon();
   }, []);
   return (
     <NavigationContainer>

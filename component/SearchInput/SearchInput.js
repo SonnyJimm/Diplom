@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import {SearchComponentStyle} from '../../styles';
 
-export const SearchInput = ({value, setValue, onFocusIn}) => {
+export const SearchInput = ({value, setValue, onFocusIn, placeholder}) => {
   return (
     <View style={SearchComponentStyle.InputView}>
       <Icon
@@ -16,7 +16,7 @@ export const SearchInput = ({value, setValue, onFocusIn}) => {
       />
       <TextInput
         style={SearchComponentStyle.InputStyle}
-        placeholder="Эхлэх цэг"
+        placeholder={placeholder}
         onChangeText={data => setValue(data)}
         value={value}
         onFocus={() => {

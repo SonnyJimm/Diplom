@@ -1,17 +1,23 @@
 import React, {useState, useEffect} from 'react';
-import {View,Image} from 'react-native';
+import {View, Image} from 'react-native';
 import {SearchScreenStyle} from '../../styles/screens/SearchScreen';
 import {getAllStations} from '../../util/db/busstation';
 import {SearchInput, RecommendLists} from '../../component';
 import {NewEmptyStation} from '../../util/helper';
 
 const SearchScreen = ({navigation}) => {
-  const [filteredData, setFilteredData] = useState([]);
+  const [filteredDataStarting, setfilteredDataStarting] = useState([]);
+  const [filteredDataEnding, setfilteredDataEnding] = useState([]);
+
   const [masterData, setMasterData] = useState([]);
   const [startingPoint, setStartingPoint] = useState(NewEmptyStation(''));
+  const [endingPoint, setEndingPoint] = useState(NewEmptyStation(''));
   const [isVisibleStartReccomend, setIsVisibleStartReccomend] = useState(false);
+  const [isVisibleEndReccomend, setIsVisiblendReccomend] = useState(false);
+
   const initializeMasterData = data => {
-    setFilteredData(data);
+    setfilteredDataStarting(data);
+    setfilteredDataEnding(data);
     setMasterData(data);
   };
   useEffect(() => {
@@ -20,23 +26,39 @@ const SearchScreen = ({navigation}) => {
     return () => {};
   }, []);
 
-  const searchStartiongPoint = input => {
+  const searchStartingPoint = input => {
     setStartingPoint(NewEmptyStation(input));
-    filterData(input);
+    filterDataStart(input);
+  };
+  const searchEndingPoint = input => {
+    setEndingPoint(NewEmptyStation(input));
+    filterDataEnd(input);
   };
   /* filter the data using input */
-  const filterData = input => {
+  const filterDataStart = input => {
     // console.log('data :', input.toLowerCase());
-    const filteredDatas = masterData.filter(data =>
+    const filteredDataStarts = masterData.filter(data =>
       data['bus_stop_name'].toLowerCase().includes(input.toLowerCase()),
     );
-    setFilteredData(filteredDatas);
+    setfilteredDataStarting(filteredDataStarts);
+  };
+  const filterDataEnd = input => {
+    // console.log('data :', input.toLowerCase());
+    const filteredDataEnds = masterData.filter(data =>
+      data['bus_stop_name'].toLowerCase().includes(input.toLowerCase()),
+    );
+    setfilteredDataEnding(filteredDataEnds);
   };
   /* set Starting point */
   const setSelectedStatingPoint = data => {
     setStartingPoint(data);
-    filterData(data['bus_stop_name']);
+    filterDataStart(data['bus_stop_name']);
     setStartingPointReccomendListInvisible();
+  };
+  const setSelectEndingPoint = data => {
+    setEndingPoint(data);
+    filterDataEnd(data['bus_stop_name']);
+    setEndingPointReccomendListInvisible();
   };
   /* setting starting point invisible */
   const setStartingPointReccomendListInvisible = () => {
@@ -44,6 +66,15 @@ const SearchScreen = ({navigation}) => {
   };
   const setStartingPointReccomendListVisible = () => {
     setIsVisibleStartReccomend(true);
+    setIsVisiblendReccomend(false);
+  };
+  /* setting ending point invisible */
+  const setEndingPointReccomendListInvisible = () => {
+    setIsVisiblendReccomend(false);
+  };
+  const setEndingPointReccomendListVisible = () => {
+    setIsVisiblendReccomend(true);
+    setIsVisibleStartReccomend(false);
   };
   const showBusStationLocation = data => {
     navigation.navigate('MapSearch', {
@@ -55,13 +86,27 @@ const SearchScreen = ({navigation}) => {
     <View style={SearchScreenStyle.FullScreen}>
       <SearchInput
         value={startingPoint['bus_stop_name']}
-        setValue={searchStartiongPoint}
+        setValue={searchStartingPoint}
         onFocusIn={setStartingPointReccomendListVisible}
+        placeholder={'Эхлэх цэг'}
       />
       {isVisibleStartReccomend && (
         <RecommendLists
-          items={filteredData}
+          items={filteredDataStarting}
           setSelectedValue={setSelectedStatingPoint}
+          showBusStationLocation={showBusStationLocation}
+        />
+      )}
+      <SearchInput
+        value={endingPoint['bus_stop_name']}
+        setValue={searchEndingPoint}
+        onFocusIn={setEndingPointReccomendListVisible}
+        placeholder={'Төгсгөлийн цэг'}
+      />
+      {isVisibleEndReccomend && (
+        <RecommendLists
+          items={filteredDataEnding}
+          setSelectedValue={setSelectEndingPoint}
           showBusStationLocation={showBusStationLocation}
         />
       )}

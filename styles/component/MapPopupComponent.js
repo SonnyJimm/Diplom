@@ -1,11 +1,4 @@
-import {
-  baseGrey,
-  baseBlue,
-  baseWhite,
-  baseBorderRadius,
-  baseFontSize,
-  baseFont,
-} from '../global';
+import {baseGrey, baseWhite, baseBorderRadius} from '../global';
 
 import {StyleSheet} from 'react-native';
 
@@ -27,21 +20,33 @@ export const MapPopupComponent = StyleSheet.create({
   },
   TitleCloseButtonWrapper: {
     flex: 1,
-    marginLeft:5,
-    flexDirection:'row-reverse'
+    marginLeft: 5,
+    flexDirection: 'row-reverse',
   },
-  TitleText:{
+  TitleText: {
     backgroundColor: baseGrey,
     alignSelf: 'center',
     borderRadius: baseBorderRadius,
-    paddingLeft:15,
-    paddingRight:15,
+    paddingLeft: 15,
+    paddingRight: 15,
   },
-  TitleCloseButton:{
+  TitleCloseButton: {
     backgroundColor: baseGrey,
     borderRadius: baseBorderRadius,
-    paddingLeft:5,
-    paddingRight:5,
-    paddingTop:1
-  }
+    paddingLeft: 5,
+    paddingRight: 5,
+    paddingTop: 1,
+  },
+  BusLinesSection: {
+    flex: 1,
+  },
+  BusLinesData: {
+    backgroundColor: baseGrey,
+    alignSelf: 'center',
+    borderRadius: baseBorderRadius,
+    paddingLeft: 15,
+    paddingRight: 15,
+    width: '90%',
+    marginTop: 5,
+  },
 });
