@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
-import MapView, {Marker} from 'react-native-maps';
+import MapView from 'react-native-maps';
 
 import {getAllStations} from '../../util/db/busstation';
 
-import {MapMarker} from '../../component/MapMarkers';
+import {MapMarker} from '../../component';
 
 import {NewInitialRegion} from '../../util/helper';
-import {MapPopup} from '../../component/MapPopup/MapPopup';
+import {MapPopup} from '../../component';
 
 const styles = StyleSheet.create({
   container: {

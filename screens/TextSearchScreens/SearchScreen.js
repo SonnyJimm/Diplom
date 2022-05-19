@@ -1,9 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import {View, Image} from 'react-native';
+import {View} from 'react-native';
+import Toast from 'react-native-simple-toast';
 import {SearchScreenStyle} from '../../styles/screens/SearchScreen';
 import {getAllStations} from '../../util/db/busstation';
-import {SearchInput, RecommendLists} from '../../component';
+import {SearchInput, RecommendLists, Button} from '../../component';
 import {NewEmptyStation} from '../../util/helper';
+import {lineSearchByStation} from '../../util/db/busstation';
 
 const SearchScreen = ({navigation}) => {
   const [filteredDataStarting, setfilteredDataStarting] = useState([]);
@@ -82,6 +84,20 @@ const SearchScreen = ({navigation}) => {
       params: {station: data},
     });
   };
+  const onSearch = () => {
+    if (startingPoint['id'] == 0) {
+      Toast.show('Та эхлэх цэгийн байршил оруулна уу', Toast.SHORT);
+      return;
+    }
+    if (endingPoint['id'] == 0) {
+      Toast.show('Та төгсөх цэгийн байршил оруулна уу', Toast.SHORT);
+      return;
+    }
+    navigation.navigate('TextSearch', {
+      screen: 'SearchResult',
+      params: {start: startingPoint, end: endingPoint},
+    });
+  };
   return (
     <View style={SearchScreenStyle.FullScreen}>
       <SearchInput
@@ -110,6 +126,7 @@ const SearchScreen = ({navigation}) => {
           showBusStationLocation={showBusStationLocation}
         />
       )}
+      <Button placeholder={'Хайх'} onClick={onSearch} />
     </View>
   );
 };

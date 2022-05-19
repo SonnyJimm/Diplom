@@ -8,6 +8,7 @@ export const MapPopup = ({data, close}) => {
   const [busLines, setBusLines] = useState([]);
   useEffect(() => {
     console.log('popup in bound');
+    console.log(data);
     getStationLines(data, setBusLines);
   }, []);
   const render = ({item}) => {
