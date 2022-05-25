@@ -5,6 +5,7 @@ import {
   baseBorderRadius,
   baseFontSize,
   baseFont,
+  baseDarkerGrey,
 } from '../global';
 export const ListComponentStyle = StyleSheet.create({
   ListView: {
@@ -51,6 +52,33 @@ export const ListItemStyle = StyleSheet.create({
 export const ListResultStyle = StyleSheet.create({
   FullScreen: {
     width: '96%',
+    borderColor: baseGrey,
+    borderWidth: 1,
+    borderRadius: baseBorderRadius,
     alignSelf: 'center',
+    marginTop: 10,
+  },
+});
+export const ListItemBusStationRes = StyleSheet.create({
+  ListItem: {
+    paddingTop:10,
+    width: '96%',
+    paddingBottom: 10,
+    flexDirection: 'row',
+    alignSelf: 'center',
+    borderTopColor: 'transparent',
+    borderBottomColor: baseGrey,
+    borderLeftColor:'transparent',
+    borderRightColor:'transparent',
+    borderWidth:1,
+  },
+  Text: {
+    fontFamily: baseFont,
+    fontSize: baseFontSize,
+  },
+  Icon: {
+    size: 20,
+    inActiveColor: baseGrey,
+    ActiveColor: baseBlue,
   },
 });

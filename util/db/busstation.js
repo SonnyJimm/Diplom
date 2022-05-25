@@ -1,4 +1,5 @@
 import {db} from './db';
+import {TRIP_START, TRIP_NODE, TRIP_END, TRIP_NONE} from '../../const';
 export const getAllStations = initializeMasterData => {
   db.transaction(function (tx) {
     tx.executeSql(
@@ -46,7 +47,6 @@ export const lineSearchByStation = (start, end, callback) => {
         // console.log("error");
         for (let index = 0; index < results.rows.length; index++) {
           let line = results.rows.item(index);
-          line['stops'] = lineBusStops(line['id']);
           lines.push(line);
         }
         callback(lines);
@@ -57,20 +57,35 @@ export const lineSearchByStation = (start, end, callback) => {
     );
   });
 };
-export const lineBusStops =  id => {
-  let stops = [];
+export const lineBusStops = (id, callback, start, end) => {
   db.transaction(tx => {
     tx.executeSql(
-      `SELECT * FROM bus_stops b LEFT JOIN bus_line_stops bs ON bs.bus_stops_id = b.id WHERE bs.bus_lines_id = ?`,
+      `SELECT * FROM bus_stops b LEFT JOIN bus_line_stops bs ON bs.bus_stops_id = b.id WHERE bs.bus_lines_id = ? ORDER BY bs.station_index ASC`,
       [id],
-      (tx, res) => {
-        stops = res.rows.raw()
+      (tx, results) => {
+        let stations = [];
+        // console.log("error");
+        let trip = false;
+        for (let index = 0; index < results.rows.length; index++) {
+          let station = results.rows.item(index);
+          station['trip'] = TRIP_NONE;
+          if (station['bus_stops_id'] === start) {
+            station['trip'] = TRIP_START;
+            trip = true;
+          } else if (station['bus_stops_id'] === end) {
+            trip = false;
+            station['trip'] = TRIP_END;
+          }
+          if (trip && (station['bus_stops_id'] !== start && station['bus_stops_id'] !== end)) {
+            station['trip'] = TRIP_NODE;
+          } 
+          stations.push(station);
+        }
+        callback(stations);
       },
       error => {
         console.log(error);
       },
     );
   });
-  console.log(stops)
-  return stops;
 };

@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {baseWhite,baseGrey} from '../global';
+import {baseWhite,baseGrey, baseDarkerGrey} from '../global';
 export const SearchResultScreenStyle = StyleSheet.create({
   FullScreen: {
     flex: 1,
@@ -7,6 +7,9 @@ export const SearchResultScreenStyle = StyleSheet.create({
   },
   Results: {
     flex: 1,
+  },
+  TextColor:{
+    
   },
   BusStationDisplay: {
     flexDirection: 'row',

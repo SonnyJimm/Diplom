@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text} from 'react-native';
+import {View, Text,FlatList} from 'react-native';
 import {SearchResultScreenStyle} from '../../styles/screens/SearchResultScreen';
 import {lineSearchByStation} from '../../util/db/busstation';
 import {NewEmptyStation} from '../../util/helper';
@@ -26,12 +26,12 @@ const SearchResult = ({navigation, route}) => {
   };
   return (
     <View style={SearchResultScreenStyle.FullScreen}>
-      <BackButtonHeader placeholdek kkkr={'Буцах'} onClick={previosPage} />
+      <BackButtonHeader placeholder={'Буцах'} onClick={previosPage} />
       <View style={SearchResultScreenStyle.Results}>
         <View style={SearchResultScreenStyle.BusStationDisplay}>
           <View style={SearchResultScreenStyle.DisplayStyle}>
             <BaseView>
-              <Text>{destinationStart['bus_stop_name']}</Text>
+              <Text style={SearchResultScreenStyle.TextColor}>{destinationStart['bus_stop_name']}</Text>
             </BaseView>
           </View>
           <View style={SearchResultScreenStyle.DisplayIconViewStyle}>
@@ -43,13 +43,16 @@ const SearchResult = ({navigation, route}) => {
           </View>
           <View style={SearchResultScreenStyle.DisplayStyle}>
             <BaseView style={SearchResultScreenStyle.DisplayStyle}>
-              <Text>{destinationEnd['bus_stop_name']}</Text>
+              <Text style={SearchResultScreenStyle.TextColor}>{destinationEnd['bus_stop_name']}</Text>
             </BaseView>
           </View>
         </View>
-        {datas.map((line, id) => {
-          return <ListResult key={id} line={line} />;
-        })}
+        <FlatList 
+          data = {datas}
+          keyExtractor={line => line['id']}
+          renderItem={({item})=>{return <ListResult line={item} start={destinationStart} end={destinationEnd}/>}}
+        />
+    
       </View>
     </View>
   );
