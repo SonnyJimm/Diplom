@@ -40,11 +40,17 @@ export const ListItemStyle = StyleSheet.create({
   },
   ComponentIcon: {
     flex: 1,
-    flexDirection:'row-reverse'
+    flexDirection: 'row-reverse',
   },
-  IconTouchable:{
-    marginRight:10,
+  IconTouchable: {
+    marginRight: 10,
     alignItems: 'center',
-    width:40,
-  }
+    width: 40,
+  },
+});
+export const ListResultStyle = StyleSheet.create({
+  FullScreen: {
+    width: '96%',
+    alignSelf: 'center',
+  },
 });

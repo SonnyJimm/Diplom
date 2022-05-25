@@ -5,7 +5,6 @@ import {SearchScreenStyle} from '../../styles/screens/SearchScreen';
 import {getAllStations} from '../../util/db/busstation';
 import {SearchInput, RecommendLists, Button} from '../../component';
 import {NewEmptyStation} from '../../util/helper';
-import {lineSearchByStation} from '../../util/db/busstation';
 
 const SearchScreen = ({navigation}) => {
   const [filteredDataStarting, setfilteredDataStarting] = useState([]);

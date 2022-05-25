@@ -20,7 +20,7 @@ export const getAllStations = initializeMasterData => {
 export const getStationLines = (data, callback) => {
   db.transaction(function (tx) {
     tx.executeSql(
-      `SELECT * FROM bus_lines WHERE id = (SELECT bus_lines_id FROM bus_line_stops WHERE bus_line_stops.bus_lines_id =bus_lines.id AND bus_stops_id = ?)`,
+      `SELECT * FROM bus_lines LEFT JOIN bus_line_stops s ON s.bus_lines_id = bus_lines.id WHERE s.bus_stops_id = ?`,
       [data['id']],
       (tx, results) => {
         let lines = [];
@@ -42,10 +42,12 @@ export const lineSearchByStation = (start, end, callback) => {
       `SELECT * FROM bus_lines WHERE id = (SELECT bus_lines_id FROM bus_line_stops WHERE bus_line_stops.bus_lines_id = bus_lines.id AND bus_stops_id = ?) AND id = (SELECT bus_lines_id FROM bus_line_stops WHERE bus_line_stops.bus_lines_id = bus_lines.id AND bus_stops_id = ?)`,
       [start['id'], end['id']],
       (tx, results) => {
-        lines = [];
+        let lines = [];
         // console.log("error");
         for (let index = 0; index < results.rows.length; index++) {
-          lines.push(results.rows.item(index));
+          let line = results.rows.item(index);
+          line['stops'] = lineBusStops(line['id']);
+          lines.push(line);
         }
         callback(lines);
       },
@@ -54,4 +56,21 @@ export const lineSearchByStation = (start, end, callback) => {
       },
     );
   });
+};
+export const lineBusStops =  id => {
+  let stops = [];
+  db.transaction(tx => {
+    tx.executeSql(
+      `SELECT * FROM bus_stops b LEFT JOIN bus_line_stops bs ON bs.bus_stops_id = b.id WHERE bs.bus_lines_id = ?`,
+      [id],
+      (tx, res) => {
+        stops = res.rows.raw()
+      },
+      error => {
+        console.log(error);
+      },
+    );
+  });
+  console.log(stops)
+  return stops;
 };
