@@ -2,12 +2,13 @@ import React, {useState, useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
 import MapView from 'react-native-maps';
 
-import {getAllStations} from '../../util/db/busstation';
-
+import {getStationLines} from '../../util/db/busstation';
 import {MapMarker} from '../../component';
-
+import {MapPoints} from '../../component/MapPoints/MapPoint';
 import {NewInitialRegion} from '../../util/helper';
 import {MapPopup} from '../../component';
+import MapViewDirections from 'react-native-maps-directions';
+import { Polyline } from 'react-native-maps';
 
 const styles = StyleSheet.create({
   container: {
@@ -30,7 +31,9 @@ const customStyle = [
   },
 ];
 
-const MapSearchScreen = ({navigation, route}) => {
+const MapGraphScreen = ({navigation, route}) => {
+  const [stroke1, setStroke1] = useState([]);
+  const [stroke2, setStroke2] = useState([]);
   const mapRef = React.createRef(NewInitialRegion(47.9177697, 106.9175774));
   const [initialRegion] = useState(NewInitialRegion(47.9177697, 106.9175774));
   const [busStations, setBusStations] = useState([]);
@@ -41,7 +44,13 @@ const MapSearchScreen = ({navigation, route}) => {
   };
   useEffect(() => {
     /* Load data from database */
-    getAllStations(initializeData);
+    // lineBusStopsLoc(199, setStroke1);
+    // lineBusStopsLoc(204, setStroke2);
+    getStationLines({id: 199}, setStroke1);
+    getStationLines({id: 204}, setStroke2);
+    console.log(setStroke1);
+    console.log(setStroke2);
+    // getAllStations(initializeData);
     return () => {};
   }, []);
   useEffect(() => {
@@ -59,6 +68,7 @@ const MapSearchScreen = ({navigation, route}) => {
     }
   }, [route]);
   const openBusStationDetail = data => {
+    console.log(data);
     setBusStation(data);
     setIsPopupVisible(true);
   };
@@ -73,16 +83,26 @@ const MapSearchScreen = ({navigation, route}) => {
         style={styles.map}
         initialRegion={initialRegion}
         customMapStyle={customStyle}>
-        {busStations.map((data, id) => {
+        {/* {busStations.map((data, id) => {
           return (
             <MapMarker key={id} data={data} onClick={openBusStationDetail} />
           );
-        })}
+        })} */}
+        {
+          stroke1.length>0 && <MapViewDirections
+          apikey={'AIzaSyAh73XM70RojdhGetvrR2YowEEDNX7NFOg'}
+          origin={stroke1[0]}
+          waipoints={stroke1}
+          destination={stroke1[stroke1.length-1]}
+          >
+        </MapViewDirections>
+        }
       </MapView>
+      {/* {(stroke1.length>0) && <Polyline coordinates={stroke2} strokeColor="blue"/>} */}
       {isPopupVisible && (
         <MapPopup data={busStation} close={closeBusStationDetail} />
       )}
     </View>
   );
 };
-export default MapSearchScreen;
+export default MapGraphScreen;

@@ -1,6 +1,6 @@
 export const baseGrey = '#ebebeb';
 export const baseBlue = '#3d8af7';
-export const baseBlack = '##000000';
+export const baseBlack = '#000000';
 export const baseDarkerGrey = '#7a7aza7a';
 export const baseWhite = '#ffffff';
 export const borderGrey = '#aaaaaa';
