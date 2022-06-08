@@ -21,6 +21,12 @@ target 'BusTracker' do
 
   pod 'react-native-simple-toast', :path => '../node_modules/react-native-simple-toast'
 
+  pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
+
+
+
+  pod 'react-native-geolocation-service', :path => '../node_modules/react-native-geolocation-service'
+
   target 'BusTrackerTests' do
     inherit! :complete
     # Pods for testing

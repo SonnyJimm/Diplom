@@ -40,11 +40,12 @@ export class BusStationLists extends React.PureComponent {
   constructor() {
     super();
   }
-  renderItem({item}) {
-    return <ListItemBusStops item={item}/>
+  renderItem(item,onPressed) {
+    // const {onPressed} = this.props;
+    return <ListItemBusStops item={item} onPressed={onPressed}/>
   }
   render(){
-    const {stations} = this.props;
+    const {stations,onPressed} = this.props;
     return (
       <View >
         <FlatList
@@ -53,7 +54,9 @@ export class BusStationLists extends React.PureComponent {
           keyExtractor={item => item['id']}
           /* ITEM SEP */
           // ItemSeparatorComponent={<View style={{width: '100%', backGroundColor:'black'}}/>}
-          renderItem={this.renderItem}
+          renderItem={({item})=>{
+            return this.renderItem(item,onPressed)
+          }}
         />
       </View>
     )

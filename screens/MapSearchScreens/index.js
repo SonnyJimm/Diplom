@@ -8,7 +8,7 @@ const Stack = createNativeStackNavigator()
 const MapSearchScreens=()=>{
 
     return (
-        <Stack.Navigator screenOptions={StackNavigationStyle} initialRouteName = "MapGraphScreen">
+        <Stack.Navigator screenOptions={StackNavigationStyle} initialRouteName = "MapSearchScreen">
             <Stack.Screen name="MapSearchScreen" component={MapSearchScreen} />
             <Stack.Screen name="MapGraphScreen" component={MapGraphScreen} />
         </Stack.Navigator>

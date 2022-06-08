@@ -4,7 +4,7 @@ import {ListResultStyle} from '../../styles';
 import {BaseView} from '../Component';
 import {BusStationLists} from './ListView';
 import {lineBusStops} from '../../util/db/busstation';
-export const ListResult = ({line, start, end}) => {
+export const ListResult = ({line, start, end,onPressed}) => {
   const [busStations, setBusStations] = useState([]);
   const [isBusStationsVisible, setIsBusStationsVisible] = useState(false);
   const onClick = () => {
@@ -15,7 +15,8 @@ export const ListResult = ({line, start, end}) => {
     }
   };
   useEffect(() => {
-    lineBusStops(line['id'], setBusStations,start['id'],end['id']);
+    lineBusStops(line['id'], setBusStations,start['bus_stop_name'],end['bus_stop_name']);
+    console.log(line)
   }, []);
   return (
     <View style={ListResultStyle.FullScreen}>
@@ -23,9 +24,10 @@ export const ListResult = ({line, start, end}) => {
         <BaseView>
           <Text>{line['route_name']}</Text>
         </BaseView>
+        
       </TouchableOpacity>
       {isBusStationsVisible && (
-        <BusStationLists stations={busStations} start={start} end={end} />
+        <BusStationLists stations={busStations} start={start} end={end} onPressed={onPressed} />
       )}
     </View>
   );

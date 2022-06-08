@@ -1,7 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text,FlatList} from 'react-native';
+import {View, Text, FlatList} from 'react-native';
 import {SearchResultScreenStyle} from '../../styles/screens/SearchResultScreen';
-import {lineSearchByStation} from '../../util/db/busstation';
+import {
+  lineSearchByStation,
+  getBusLineBetweenStation,
+} from '../../util/db/busstation';
 import {NewEmptyStation} from '../../util/helper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -18,10 +21,18 @@ const SearchResult = ({navigation, route}) => {
     setDestinationStart(start);
     setDestinationEnd(end);
     lineSearchByStation(start, end, setResultData);
+    // getBusLineBetweenStation(start, end);
   }, [route]);
   const previosPage = () => {
     navigation.navigate('TextSearch', {
       screen: 'SearchScreen',
+    });
+  };
+  const showBusStationLocation = data => {
+    console.log(data)
+    navigation.navigate('MapSearch', {
+      screen: 'MapSearchScreen',
+      params: {station: data},
     });
   };
   return (
@@ -31,7 +42,9 @@ const SearchResult = ({navigation, route}) => {
         <View style={SearchResultScreenStyle.BusStationDisplay}>
           <View style={SearchResultScreenStyle.DisplayStyle}>
             <BaseView>
-              <Text style={SearchResultScreenStyle.TextColor}>{destinationStart['bus_stop_name']}</Text>
+              <Text style={SearchResultScreenStyle.TextColor}>
+                {destinationStart['bus_stop_name']}
+              </Text>
             </BaseView>
           </View>
           <View style={SearchResultScreenStyle.DisplayIconViewStyle}>
@@ -43,16 +56,26 @@ const SearchResult = ({navigation, route}) => {
           </View>
           <View style={SearchResultScreenStyle.DisplayStyle}>
             <BaseView style={SearchResultScreenStyle.DisplayStyle}>
-              <Text style={SearchResultScreenStyle.TextColor}>{destinationEnd['bus_stop_name']}</Text>
+              <Text style={SearchResultScreenStyle.TextColor}>
+                {destinationEnd['bus_stop_name']}
+              </Text>
             </BaseView>
           </View>
         </View>
-        <FlatList 
-          data = {datas}
+        <FlatList
+          data={datas}
           keyExtractor={line => line['id']}
-          renderItem={({item})=>{return <ListResult line={item} start={destinationStart} end={destinationEnd}/>}}
+          renderItem={({item}) => {
+            return (
+              <ListResult
+                line={item}
+                onPressed={showBusStationLocation}
+                start={destinationStart}
+                end={destinationEnd}
+              />
+            );
+          }}
         />
-    
       </View>
     </View>
   );

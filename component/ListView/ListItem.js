@@ -41,42 +41,54 @@ export class ListItemBusStops extends React.PureComponent {
   constructor() {
     super();
   }
-  renderIcon(trip){
-    switch(trip){
+  renderIcon(trip) {
+    switch (trip) {
       case TRIP_START:
-        return <Icon
-        name="street-view"
-        size={ListItemBusStationRes.Icon.size}
-        color={ListItemBusStationRes.Icon.ActiveColor}
-      />
+        return (
+          <Icon
+            name="street-view"
+            size={ListItemBusStationRes.Icon.size}
+            color={ListItemBusStationRes.Icon.ActiveColor}
+          />
+        );
       case TRIP_NONE:
-        return <Icon
-        name="chevron-down"
-        size={ListItemBusStationRes.Icon.size}
-        color={ListItemBusStationRes.Icon.inActiveColor}
-      />
+        return (
+          <Icon
+            name="chevron-down"
+            size={ListItemBusStationRes.Icon.size}
+            color={ListItemBusStationRes.Icon.inActiveColor}
+          />
+        );
       case TRIP_END:
-        return <Icon
-        name="street-view"
-        size={ListItemBusStationRes.Icon.size}
-        color={ListItemBusStationRes.Icon.ActiveColor}
-      />
+        return (
+          <Icon
+            name="street-view"
+            size={ListItemBusStationRes.Icon.size}
+            color={ListItemBusStationRes.Icon.ActiveColor}
+          />
+        );
       case TRIP_NODE:
-        return <Icon
-        name="chevron-down"
-        size={ListItemBusStationRes.Icon.size}
-        color={ListItemBusStationRes.Icon.ActiveColor}
-      />
+        return (
+          <Icon
+            name="chevron-down"
+            size={ListItemBusStationRes.Icon.size}
+            color={ListItemBusStationRes.Icon.ActiveColor}
+          />
+        );
     }
   }
   render() {
-    const {item} = this.props;
+    const {item, onPressed} = this.props;
     console.log(item);
     return (
-      <View style={ListItemBusStationRes.ListItem}>
-       {this.renderIcon(item['trip'])}
+      <TouchableOpacity
+        style={ListItemBusStationRes.ListItem}
+        onPress={()=> {
+          onPressed(item);
+        }}>
+        {this.renderIcon(item['trip'])}
         <Text style={ListItemBusStationRes.Text}>{item['bus_stop_name']}</Text>
-      </View>
+      </TouchableOpacity>
     );
   }
 }

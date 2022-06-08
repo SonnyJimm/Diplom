@@ -1,13 +1,20 @@
-import React, {useState, useEffect} from 'react';
-import {View, StyleSheet} from 'react-native';
+import React, {useState, useEffect, useRef} from 'react';
+import {
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  PermissionsAndroid,
+} from 'react-native';
 import MapView from 'react-native-maps';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 import {getAllStations} from '../../util/db/busstation';
 
-import {MapMarker} from '../../component';
+import {MapMarker, PersonLocation} from '../../component';
 
 import {NewInitialRegion} from '../../util/helper';
 import {MapPopup} from '../../component';
+
+import Geolocation from 'react-native-geolocation-service';
 
 const styles = StyleSheet.create({
   container: {
@@ -15,6 +22,15 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1,
+  },
+  button: {
+    position: 'absolute',
+    bottom: 10,
+    right: 20,
+    width: 40,
+    height: 40,
+    backgroundColor: 'white',
+    borderRadius: 40,
   },
 });
 
@@ -31,18 +47,25 @@ const customStyle = [
 ];
 
 const MapSearchScreen = ({navigation, route}) => {
-  const mapRef = React.createRef(NewInitialRegion(47.9177697, 106.9175774));
+  const mapRef = useRef(null);
   const [initialRegion] = useState(NewInitialRegion(47.9177697, 106.9175774));
   const [busStations, setBusStations] = useState([]);
   const [busStation, setBusStation] = useState();
   const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [isLocationActive, setLocationActive] = useState(false);
+  const [userLocation, setUserLocation] = useState(
+    NewInitialRegion(47.9177697, 106.9175774),
+  );
+
+  let watchID = 0;
   const initializeData = data => {
     setBusStations(data);
   };
   useEffect(() => {
-    /* Load data from database */
     getAllStations(initializeData);
-    return () => {};
+    return () => {
+      Geolocation.clearWatch(watchID);
+    };
   }, []);
   useEffect(() => {
     // The screen is focused
@@ -50,7 +73,6 @@ const MapSearchScreen = ({navigation, route}) => {
     if (route.params) {
       if (route.params.station) {
         const {station} = route.params;
-        console.log(station);
         mapRef.current.animateToRegion(
           NewInitialRegion(station['lat'], station['long']),
         );
@@ -66,6 +88,39 @@ const MapSearchScreen = ({navigation, route}) => {
     setIsPopupVisible(false);
     setBusStation(null);
   };
+  const activateLocation = () => {
+    if (isLocationActive) {
+      setLocationActive(false);
+      Geolocation.clearWatch(watchID);
+      // console.log(watchID);
+    } else {
+      setLocationActive(true);
+      getLocation();
+    }
+  };
+  const setLocationTrack = location => {
+    setUserLocation(location);
+    mapRef.current.animateToRegion(location);
+  };
+  const getLocation = async () => {
+    await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+    watchID = Geolocation.watchPosition(
+      data => {
+        setLocationTrack(
+          NewInitialRegion(data.coords.latitude, data.coords.longitude),
+        );
+        console.log(data);
+      },
+      error => {
+        console.log(error);
+      },
+      {enableHighAccuracy: true, distanceFilter: 0, interval: 3000},
+    );
+    console.log(watchID);
+  };
+
   return (
     <View style={styles.container}>
       <MapView
@@ -78,10 +133,20 @@ const MapSearchScreen = ({navigation, route}) => {
             <MapMarker key={id} data={data} onClick={openBusStationDetail} />
           );
         })}
+        {isLocationActive && <PersonLocation data={userLocation} />}
       </MapView>
       {isPopupVisible && (
         <MapPopup data={busStation} close={closeBusStationDetail} />
       )}
+      <TouchableOpacity style={styles.button} onPress={activateLocation}>
+        <View style={{alignItems: 'center', marginTop: 7}}>
+          <Icon
+            name={'street-view'}
+            size={30}
+            color={isLocationActive ? 'blue' : 'black'}
+          />
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };
