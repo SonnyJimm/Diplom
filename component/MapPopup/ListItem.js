@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {View, Text} from 'react-native';
+import {View, Text,TouchableOpacity} from 'react-native';
 
 import {MapPopupComponent} from '../../styles';
 
@@ -9,15 +9,15 @@ export class ListItem extends React.PureComponent {
     super();
   }
   render() {
-    const {item} = this.props;
+    const {item,onChoose} = this.props;
     return (
-      <View
+      <TouchableOpacity
         style={MapPopupComponent.BusLinesData}
         onPress={() => {
-          setSelectedValue(item);
+          onChoose(item);
         }}>
         <Text>{item['route_name']}</Text>
-      </View>
+      </TouchableOpacity>
     );
   }
 }

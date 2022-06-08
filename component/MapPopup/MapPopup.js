@@ -4,7 +4,7 @@ import {MapPopupComponent} from '../../styles/component';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {getStationLines} from '../../util/db/busstation';
 import {ListItem} from './ListItem';
-export const MapPopup = ({data, close}) => {
+export const MapPopup = ({data, close,onChoose}) => {
   const [busLines, setBusLines] = useState([]);
   useEffect(() => {
     console.log('popup in bound');
@@ -12,7 +12,7 @@ export const MapPopup = ({data, close}) => {
     return () => {};
   }, [data]);
   const render = ({item}) => {
-    return <ListItem item={item} />;
+    return <ListItem item={item} onChoose={onChoose} />;
   };
   return (
     <View style={MapPopupComponent.Wrapper}>

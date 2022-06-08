@@ -3,6 +3,7 @@ import {View} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {SearchScreenStyle} from '../../styles/screens/SearchScreen';
 import {getAllStations} from '../../util/db/busstation';
+import {getBusLines} from '../../util/db/buslines';
 import {SearchInput, RecommendLists, Button} from '../../component';
 import {NewEmptyStation} from '../../util/helper';
 
@@ -15,7 +16,7 @@ const SearchScreen = ({navigation}) => {
   const [endingPoint, setEndingPoint] = useState(NewEmptyStation(''));
   const [isVisibleStartReccomend, setIsVisibleStartReccomend] = useState(false);
   const [isVisibleEndReccomend, setIsVisiblendReccomend] = useState(false);
-
+  const [busLinesMaster, setBusLines] = useState([]);
   const initializeMasterData = data => {
     setfilteredDataStarting(data);
     setfilteredDataEnding(data);
@@ -24,6 +25,7 @@ const SearchScreen = ({navigation}) => {
   useEffect(() => {
     /* Load data from database */
     getAllStations(initializeMasterData);
+    getBusLines(initializeLinesMaster);
     return () => {};
   }, []);
 
@@ -34,6 +36,9 @@ const SearchScreen = ({navigation}) => {
   const searchEndingPoint = input => {
     setEndingPoint(NewEmptyStation(input));
     filterDataEnd(input);
+  };
+  const initializeLinesMaster = data => {
+    setBusLines(data);
   };
   /* filter the data using input */
   const filterDataStart = input => {

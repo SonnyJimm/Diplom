@@ -5,9 +5,9 @@ import {
   StyleSheet,
   PermissionsAndroid,
 } from 'react-native';
-import MapView from 'react-native-maps';
+import MapView ,{ Polyline} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {getAllStations} from '../../util/db/busstation';
+import {getAllStations,lineBusStopsLoc} from '../../util/db/busstation';
 
 import {MapMarker, PersonLocation} from '../../component';
 
@@ -26,6 +26,15 @@ const styles = StyleSheet.create({
   button: {
     position: 'absolute',
     bottom: 10,
+    right: 20,
+    width: 40,
+    height: 40,
+    backgroundColor: 'white',
+    borderRadius: 40,
+  },
+  buttonClose: {
+    position: 'absolute',
+    bottom: 60,
     right: 20,
     width: 40,
     height: 40,
@@ -53,6 +62,8 @@ const MapSearchScreen = ({navigation, route}) => {
   const [busStation, setBusStation] = useState();
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [isLocationActive, setLocationActive] = useState(false);
+  const [isLineVisible, setLineVisible] = useState(false);
+  const [lineLocations, setLineLocations] = useState([]);
   const [userLocation, setUserLocation] = useState(
     NewInitialRegion(47.9177697, 106.9175774),
   );
@@ -102,6 +113,16 @@ const MapSearchScreen = ({navigation, route}) => {
     setUserLocation(location);
     mapRef.current.animateToRegion(location);
   };
+  const onChoose = data => {
+    console.log(data);
+    setLineVisible(true);
+    lineBusStopsLoc(data["bus_lines_id"],setLineLocations)
+  };
+  const closeLines = () => {
+    setLineVisible(false);
+    setLineLocations([]);
+  };
+
   const getLocation = async () => {
     await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -134,9 +155,14 @@ const MapSearchScreen = ({navigation, route}) => {
           );
         })}
         {isLocationActive && <PersonLocation data={userLocation} />}
+        {(lineLocations.length>0) && <Polyline coordinates={lineLocations} strokeWidth={5} strokeColor="blue"/>}
       </MapView>
       {isPopupVisible && (
-        <MapPopup data={busStation} close={closeBusStationDetail} />
+        <MapPopup
+          data={busStation}
+          onChoose={onChoose}
+          close={closeBusStationDetail}
+        />
       )}
       <TouchableOpacity style={styles.button} onPress={activateLocation}>
         <View style={{alignItems: 'center', marginTop: 7}}>
@@ -147,6 +173,17 @@ const MapSearchScreen = ({navigation, route}) => {
           />
         </View>
       </TouchableOpacity>
+      {isLineVisible && (
+        <TouchableOpacity style={styles.buttonClose} onPress={closeLines}>
+          <View style={{alignItems: 'center', marginTop: 3}}>
+            <Icon
+              name={'close'}
+              size={30}
+              color={isLocationActive ? 'blue' : 'black'}
+            />
+          </View>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
