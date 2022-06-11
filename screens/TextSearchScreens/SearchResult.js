@@ -29,8 +29,8 @@ const SearchResult = ({navigation, route}) => {
     });
   };
   const showBusStationLocation = data => {
-    console.log(data)
-    navigation.navigate('MapSearch', {
+    data["id"] = data["bus_lines_id"]
+      navigation.navigate('MapSearch', {
       screen: 'MapSearchScreen',
       params: {station: data},
     });

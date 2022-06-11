@@ -3,7 +3,7 @@ import {View} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {SearchScreenStyle} from '../../styles/screens/SearchScreen';
 import {getAllStations} from '../../util/db/busstation';
-import {getBusLines} from '../../util/db/buslines';
+// import {getBusLines} from '../../util/db/buslines';
 import {SearchInput, RecommendLists, Button} from '../../component';
 import {NewEmptyStation} from '../../util/helper';
 
@@ -25,7 +25,7 @@ const SearchScreen = ({navigation}) => {
   useEffect(() => {
     /* Load data from database */
     getAllStations(initializeMasterData);
-    getBusLines(initializeLinesMaster);
+    // getBusLines(initializeLinesMaster);
     return () => {};
   }, []);
 
